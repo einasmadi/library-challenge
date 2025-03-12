@@ -1,0 +1,17 @@
+# Backend (FastAPI) Specific
+# Python virtual environment
+venv/
+.env/
+.venv/
+ENV/
+env/
+bin/
+include/
+lib/
+lib64/
+pip-selfcheck.json
+pyvenv.cfg
+
+# Frontend (Next.js) Specific
+.next/
+out/

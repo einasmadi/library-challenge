@@ -1,0 +1,19 @@
+# Use an official Node.js runtime as the base image
+FROM node:16 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM node:16-alpine
+WORKDIR /app
+
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/node_modules ./node_modules
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
