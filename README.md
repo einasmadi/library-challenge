@@ -1,4 +1,4 @@
-# My App - Full Stack Application (FastAPI + Next.js)
+# Library Challenge (FastAPI + Next.js)
 
 This is a full-stack application with a **FastAPI backend** and a **Next.js frontend**. The application allows users to manage a collection of books, including creating, editing, and viewing book details. The backend is built with **FastAPI** and uses **PostgreSQL** as the database, while the frontend is built with **Next.js** and uses **React** for the user interface.
 
