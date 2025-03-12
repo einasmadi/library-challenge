@@ -11,6 +11,7 @@ lib/
 lib64/
 pip-selfcheck.json
 pyvenv.cfg
+__pycache__/
 
 # Frontend (Next.js) Specific
 .next/
