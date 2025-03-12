@@ -52,6 +52,7 @@ class BookOut(BookBase):
   )
 
 
+# Find the author or create a new one
 def get_author_or_create(author_name: str, db: Session):
   author = db.query(Author).filter(Author.name == author_name).first()
 

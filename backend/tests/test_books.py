@@ -6,6 +6,7 @@ from app.main import app
 from app.database import SessionLocal, engine
 from app.models import Base
 
+# Ideally, this should connect to a different database than the one used by the main application.
 DATABASE_URL = "postgresql://admin:admin@localhost:5432/library"
 
 engine = create_engine(DATABASE_URL)
@@ -13,7 +14,7 @@ SessionLocal = sessionmaker(autocommit = False, autoflush = False, bind = engine
 Base = declarative_base()
 
 
-# Setup and teardown for database (runs before and after each test)
+# Setup and teardown for database
 def get_db():
   db = SessionLocal()
   try:
@@ -46,6 +47,10 @@ def test_create_book():
   assert response.json()["title"] == "The Book"
   assert response.json()["author_name"] == "John Doe"
 
+  # Cleanup up db and test delete
+  response = client.delete(f'/api/v1/books/{response.json()["id"]}')
+  assert response.status_code == 204
+
 
 def test_get_books():
   response = client.get("/api/v1/books")
@@ -74,3 +79,7 @@ def test_update_book():
   assert response.status_code == 200
   assert response.json()["title"] == "Updated Book Title"
   assert response.json()["author_name"] == "Jane Doe"
+
+  # Now, delete the book
+  response = client.delete(f"/api/v1/books/{book_id}")
+  assert response.status_code == 204

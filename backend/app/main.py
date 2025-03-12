@@ -8,12 +8,11 @@ app = FastAPI()
 
 # List of allowed origins
 origins = [
-  "http://localhost:3000",  # Frontend development URL (adjust if needed)
-  "http://127.0.0.1:3000",  # Another common localhost address for development
-  "*",  # Allow all origins (use carefully)
+  "http://localhost:3000",  # Frontend development URL
+  "*",  # Allow all origins (only use for dev)
 ]
 
-# Add CORSMiddleware to the FastAPI app
+# Add CORSMiddleware to the FastAPI app, done for development
 app.add_middleware(
   CORSMiddleware,
   allow_origins=origins,  # Allows specific origins or "*" for all origins
