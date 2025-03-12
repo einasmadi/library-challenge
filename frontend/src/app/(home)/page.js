@@ -33,11 +33,10 @@ export default function Home() {
     return () => subscription.unsubscribe();
   }, [searchSubject]);
 
-  // Handle search input change
   const handleSearchChange = (event) => {
     const name = event.target.value;
     setAuthorName(name);
-    searchSubject.next(name); // Emit the new author name
+    searchSubject.next(name);
   };
 
   const handleDeleteClick = (book) => {

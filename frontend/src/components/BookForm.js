@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { getAuthors } from "@/services/author/api"; // For dropdown
+import useAuthors from "@/hooks/useAuthors";
 
 export default function BookForm({
-   onSubmit,
-   initialData = {},
-   isPending = false,
+  onSubmit,
+  initialData = {},
+  isPending = false
 }) {
   const {
     register,
@@ -18,35 +18,18 @@ export default function BookForm({
   } = useForm({
     defaultValues: {
       ...initialData,
-      author: null, // Default to null until authors are fetched
+      author: null
     },
   });
 
-  const [showAuthorInput, setShowAuthorInput] = useState(false);
-  const [authors, setAuthors] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const currentYear = new Date().getFullYear();
 
-  // Fetch authors on component mount
-  useEffect(() => {
-    const fetchAuthors = async () => {
-      const data = await getAuthors();
-      setAuthors(data);
-      setIsLoading(false);
-
-      // Set the default value for the author dropdown
-      if (initialData.author_name) {
-        const existingAuthor = data.find((a) => a.name === initialData.author_name);
-        if (existingAuthor) {
-          setValue('author', { value: existingAuthor.id, label: existingAuthor.name });
-        } else {
-          setValue('author', { value: 'new', label: initialData.author_name });
-          setShowAuthorInput(true);
-        }
-      }
-    };
-
-    fetchAuthors();
-  }, [initialData.author_name, setValue]);
+  const {
+    isLoading,
+    showAuthorInput,
+    authorOptions,
+    setShowAuthorInput,
+  } = useAuthors(initialData.author_name, setValue);
 
   // Watch the author dropdown value
   const selectedAuthor = watch('author');
@@ -55,23 +38,12 @@ export default function BookForm({
   useEffect(() => {
     if (selectedAuthor?.value === 'new') {
       setShowAuthorInput(true);
-      setValue('author_name', ''); // Set the author_name field
+      setValue('author_name', '');
     } else {
       setShowAuthorInput(false);
-      setValue('author_name', selectedAuthor?.label || ''); // Clear the author_name field
+      setValue('author_name', selectedAuthor?.label || '');
     }
-  }, [selectedAuthor, setValue]);
-
-  // Format authors for the dropdown
-  const authorOptions = authors.map((author) => ({
-    value: author.id,
-    label: author.name,
-  }));
-
-  // Add an option for creating a new author
-  authorOptions.push({ value: 'new', label: 'Create New Author' });
-
-  const currentYear = new Date().getFullYear();
+  }, [selectedAuthor, setValue, setShowAuthorInput]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
